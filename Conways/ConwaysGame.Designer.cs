@@ -44,6 +44,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.loopingBoardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +88,8 @@
             // 
             this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newGameToolStripMenuItem,
-            this.setSpeedToolStripMenuItem});
+            this.setSpeedToolStripMenuItem,
+            this.loopingBoardToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "Game";
@@ -114,13 +116,13 @@
             // msToolStripMenuItem
             // 
             this.msToolStripMenuItem.Name = "msToolStripMenuItem";
-            this.msToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.msToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.msToolStripMenuItem.Text = "10ms";
             // 
             // msToolStripMenuItem1
             // 
             this.msToolStripMenuItem1.Name = "msToolStripMenuItem1";
-            this.msToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.msToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.msToolStripMenuItem1.Text = "50ms";
             // 
             // msToolStripMenuItem2
@@ -128,13 +130,13 @@
             this.msToolStripMenuItem2.Checked = true;
             this.msToolStripMenuItem2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.msToolStripMenuItem2.Name = "msToolStripMenuItem2";
-            this.msToolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.msToolStripMenuItem2.Size = new System.Drawing.Size(108, 22);
             this.msToolStripMenuItem2.Text = "100ms";
             // 
             // msToolStripMenuItem3
             // 
             this.msToolStripMenuItem3.Name = "msToolStripMenuItem3";
-            this.msToolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.msToolStripMenuItem3.Size = new System.Drawing.Size(108, 22);
             this.msToolStripMenuItem3.Text = "500ms";
             // 
             // label1
@@ -163,6 +165,14 @@
             this.label3.Size = new System.Drawing.Size(130, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "Right Click: Empty Square";
+            // 
+            // loopingBoardToolStripMenuItem
+            // 
+            this.loopingBoardToolStripMenuItem.CheckOnClick = true;
+            this.loopingBoardToolStripMenuItem.Name = "loopingBoardToolStripMenuItem";
+            this.loopingBoardToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loopingBoardToolStripMenuItem.Text = "Looping Board";
+            this.loopingBoardToolStripMenuItem.CheckStateChanged += new System.EventHandler(this.loopingBoardToolStripMenuItem_CheckStateChanged);
             // 
             // ConwaysGame
             // 
@@ -204,6 +214,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ToolStripMenuItem loopingBoardToolStripMenuItem;
     }
 }
 

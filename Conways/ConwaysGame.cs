@@ -10,6 +10,7 @@ namespace Conways
         public static Color CurrentColor = Color.Black;
         public bool IsStarted = false;
         public Square[,] SquareArray;
+        public bool LoopingBoard = false;
 
         public ConwaysGame()
         {
@@ -74,6 +75,7 @@ namespace Conways
                     CurrentColor = Color.Black;
                     GenerationTimer.Enabled = false;
                     setSpeedToolStripMenuItem.Enabled = true;
+                    loopingBoardToolStripMenuItem.Enabled = true;
                     GenerationTimer.Stop();
                     ReColorAll();
                 }
@@ -82,6 +84,7 @@ namespace Conways
                     CurrentColor = Color.Blue;
                     GenerationTimer.Enabled = true;
                     setSpeedToolStripMenuItem.Enabled = false;
+                    loopingBoardToolStripMenuItem.Enabled = false;
                     GenerationTimer.Start();
                     ReColorAll();
                 }
@@ -112,30 +115,58 @@ namespace Conways
         private int GetNeighborCount(int i, int j)
         {
             var count = 0;
-            if (i != 0)
-                if (SquareArray[i - 1, j].IsAlive)
-                    count++;
-            if (j != 0)
-                if (SquareArray[i, j - 1].IsAlive)
-                    count++;
-            if (j != 0 && i != 0)
-                if (SquareArray[i - 1, j - 1].IsAlive)
-                    count++;
-            if (j != SquareArray.GetLength(1) - 1)
-                if (SquareArray[i, j + 1].IsAlive)
-                    count++;
-            if (i != SquareArray.GetLength(0) - 1)
-                if (SquareArray[i + 1, j].IsAlive)
-                    count++;
-            if (i != SquareArray.GetLength(0) - 1 && j != SquareArray.GetLength(1) - 1)
-                if (SquareArray[i + 1, j + 1].IsAlive)
-                    count++;
-            if (i != 0 && j != SquareArray.GetLength(1) - 1)
-                if (SquareArray[i - 1, j + 1].IsAlive)
-                    count++;
-            if (j != 0 && i != SquareArray.GetLength(0) - 1)
-                if (SquareArray[i + 1, j - 1].IsAlive)
-                    count++;
+            if (!LoopingBoard)
+            {
+                if (i != 0)
+                    if (SquareArray[i - 1, j].IsAlive)
+                        count++;
+                if (j != 0)
+                    if (SquareArray[i, j - 1].IsAlive)
+                        count++;
+                if (j != 0 && i != 0)
+                    if (SquareArray[i - 1, j - 1].IsAlive)
+                        count++;
+                if (j != SquareArray.GetLength(1) - 1)
+                    if (SquareArray[i, j + 1].IsAlive)
+                        count++;
+                if (i != SquareArray.GetLength(0) - 1)
+                    if (SquareArray[i + 1, j].IsAlive)
+                        count++;
+                if (i != SquareArray.GetLength(0) - 1 && j != SquareArray.GetLength(1) - 1)
+                    if (SquareArray[i + 1, j + 1].IsAlive)
+                        count++;
+                if (i != 0 && j != SquareArray.GetLength(1) - 1)
+                    if (SquareArray[i - 1, j + 1].IsAlive)
+                        count++;
+                if (j != 0 && i != SquareArray.GetLength(0) - 1)
+                    if (SquareArray[i + 1, j - 1].IsAlive)
+                        count++;
+            }
+            else
+            {
+                var iMinus = i - 1;
+                var jMinus = j - 1;
+                var iPlus = i + 1;
+                var jPlus = j + 1;
+                if (i == 0)
+                    iMinus = SquareArray.GetLength(0) - 1;
+                if (j == 0)
+                    jMinus = SquareArray.GetLength(1) - 1;
+                if (i == SquareArray.GetLength(0) - 1)
+                    iPlus = 0;
+                if (j == SquareArray.GetLength(1) - 1)
+                    jPlus = 0;
+                if (SquareArray[iMinus, jMinus].IsAlive) count++;
+                if (SquareArray[iMinus, jPlus].IsAlive) count++;
+                if (SquareArray[iPlus, jPlus].IsAlive) count++;
+                if (SquareArray[iPlus, jMinus].IsAlive) count++;
+
+                if (SquareArray[iMinus, j].IsAlive) count++;
+                if (SquareArray[iPlus, j].IsAlive) count++;
+                if (SquareArray[i, jMinus].IsAlive) count++;
+                if (SquareArray[i, jPlus].IsAlive) count++;
+            }
+
             return count;
         }
 
@@ -208,7 +239,15 @@ namespace Conways
                     SquareArray[i, j].IsAlive = false;
                     SquareArray[i, j].EmptySquare();
                 }
-
+            if (GenerationTimer.Enabled)
+            {
+                CurrentColor = Color.Black;
+                GenerationTimer.Enabled = false;
+                setSpeedToolStripMenuItem.Enabled = true;
+                loopingBoardToolStripMenuItem.Enabled = true;
+                GenerationTimer.Stop();
+                ReColorAll();
+            }
             UpdateGraphics();
         }
 
@@ -287,6 +326,11 @@ namespace Conways
 
                 IsFilled = false;
             }
+        }
+
+        private void loopingBoardToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
+        {
+            LoopingBoard = !LoopingBoard;
         }
     }
 }
