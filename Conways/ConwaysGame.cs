@@ -6,11 +6,11 @@ namespace Conways
 {
     public partial class ConwaysGame : Form
     {
-        public static Bitmap Map;
-        public static Color CurrentColor = Color.Black;
-        public bool IsStarted = false;
-        public Square[,] SquareArray;
-        public bool LoopingBoard = false;
+        public static Bitmap Map; //Bitmap to store graphics
+        public static Color CurrentColor = Color.Black; //Current color, allows color of blocks to change when the game is running
+        public bool IsStarted = false; //Boolean for whether the game is started
+        public Square[,] SquareArray; //Array to store sqaures of the game
+        public bool LoopingBoard = false; //Boolean to determine if the game board loops around itself or is bound
 
         public ConwaysGame()
         {
@@ -19,44 +19,51 @@ namespace Conways
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            SquareArray = new Square[pictureBox1.Width / 10, pictureBox1.Height / 10];
-            Map = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            SquareArray = new Square[pictureBox1.Width / 10, pictureBox1.Height / 10]; //Intialize SqaureArray, sized to be 10x10 pixels
+            Map = new Bitmap(pictureBox1.Width, pictureBox1.Height); //Set map to the size of the picturebox itll be displayed in
 
-            for (var i = 0; i < SquareArray.GetLength(0); i++)
+            //Loop through each index in the SquareArray, setting its starting point and calling the empty square method for each
+            for (var i = 0; i < SquareArray.GetLength(0); i++) 
             for (var j = 0; j < SquareArray.GetLength(1); j++)
             {
                 SquareArray[i, j] = new Square(new Point(i * 10, j * 10));
                 SquareArray[i, j].EmptySquare();
             }
 
-            UpdateGraphics();
+            UpdateGraphics(); 
         }
 
+        //Loop through each square in the array, if the square has been set to change, switch from alive to empty, or empty to alive. Call proper graphics method for each
         public void UpdateSquares()
         {
             for (var i = 0; i < SquareArray.GetLength(0); i++)
-            for (var j = 0; j < SquareArray.GetLength(1); j++)
-                if (SquareArray[i, j].IsAlive && SquareArray[i, j].SetForChange)
-                {
-                    SquareArray[i, j].EmptySquare();
-                    SquareArray[i, j].SetForChange = false;
-                    SquareArray[i, j].IsAlive = false;
-                }
-                else if (!SquareArray[i, j].IsAlive && SquareArray[i, j].SetForChange)
-                {
-                    SquareArray[i, j].FillSquare(CurrentColor);
-                    SquareArray[i, j].SetForChange = false;
-                    SquareArray[i, j].IsAlive = true;
-                }
+                for (var j = 0; j < SquareArray.GetLength(1); j++)
+                    if (SquareArray[i, j].SetForChange)
+                    {
+                        if (SquareArray[i, j].IsAlive)
+                        {
+                            SquareArray[i, j].EmptySquare();
+                            SquareArray[i, j].SetForChange = false;
+                            SquareArray[i, j].IsAlive = false;
+                        }
+                        else
+                        {
+                            SquareArray[i, j].FillSquare(CurrentColor);
+                            SquareArray[i, j].SetForChange = false;
+                            SquareArray[i, j].IsAlive = true;
+                        }
+                    }
 
             UpdateGraphics();
         }
-
+        
+        //Set picturebox image to new bitmap
         public void UpdateGraphics()
         {
             pictureBox1.Image = Map;
         }
 
+        //Recolor all filled squares to the current color, used when turning the game on or off
         public void ReColorAll()
         {
             for (var i = 0; i < SquareArray.GetLength(0); i++)
@@ -66,6 +73,7 @@ namespace Conways
             UpdateGraphics();
         }
 
+        //When the user presses enter, start or end the game
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == Convert.ToChar(Keys.Enter))
@@ -91,6 +99,11 @@ namespace Conways
             }
         }
 
+        /*
+        Core game logic, loop through each square and find the count of alive neighbors 
+        If an alive square doesnt have 2 or 3 neighbors, set it for change to be emptied
+        If an empty square has exactly 3 neighbors, set it for change to be alive
+        */
         public void NextGeneration()
         {
             for (var i = 0; i < SquareArray.GetLength(0); i++)
@@ -112,6 +125,12 @@ namespace Conways
             UpdateSquares();
         }
 
+        /*
+        Gets the amount of alive neighbors around the given index[i,j]  
+        if the board is not looping, ignore indexes which would be out of bounds
+        if the board is looping, instead wrap the index around to the end or start of the array(if i == 0, check where i == array.length - 1)
+        return count as int
+        */
         private int GetNeighborCount(int i, int j)
         {
             var count = 0;
@@ -170,9 +189,10 @@ namespace Conways
             return count;
         }
 
+        //Tick for when the left mouse is held down to fill in squares cursor is currently on, checks to make sure game isnt running and that the mouse is in the form
         private void FillSquare_Tick(object sender, EventArgs e)
         {
-            if (IsStarted || !pictureBox1.ClientRectangle.Contains(PointToClient(MousePosition)) ||
+            if (!pictureBox1.ClientRectangle.Contains(PointToClient(MousePosition)) ||
                 GenerationTimer.Enabled) return;
             var position = pictureBox1.PointToClient(Cursor.Position);
             var currentSquare = SquareArray[(position.X - position.X % 10) / 10,
@@ -188,7 +208,7 @@ namespace Conways
 
         private void EmptySquare_Tick(object sender, EventArgs e)
         {
-            if (IsStarted || !pictureBox1.ClientRectangle.Contains(PointToClient(MousePosition)) ||
+            if (!pictureBox1.ClientRectangle.Contains(PointToClient(MousePosition)) ||
                 GenerationTimer.Enabled) return;
             var position = pictureBox1.PointToClient(Cursor.Position);
             var currentSquare = SquareArray[(position.X - position.X % 10) / 10,
