@@ -16,7 +16,7 @@ Left-Click: Set a square to "alive"
 Right-Click: Set a square to "dead"
 
 
-Set speed to 10, 50, 100 and 500ms(default is 100ms).
+Set speed to 10, 50, 100 or 500ms(default is 100ms).
 
 Squares are colored black when paused, and blue when running.
 
