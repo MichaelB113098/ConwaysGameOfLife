@@ -8,7 +8,6 @@ namespace Conways
     {
         public static Bitmap Map; //Bitmap to store graphics
         public static Color CurrentColor = Color.Black; //Current color, allows color of blocks to change when the game is running
-        public bool IsStarted = false; //Boolean for whether the game is started
         public Square[,] SquareArray; //Array to store sqaures of the game
         public bool LoopingBoard = false; //Boolean to determine if the game board loops around itself or is bound
 
@@ -103,6 +102,7 @@ namespace Conways
         Core game logic, loop through each square and find the count of alive neighbors 
         If an alive square doesnt have 2 or 3 neighbors, set it for change to be emptied
         If an empty square has exactly 3 neighbors, set it for change to be alive
+        Then call the updateSqaures method to empty and fill squares
         */
         public void NextGeneration()
         {
@@ -205,7 +205,7 @@ namespace Conways
 
             UpdateGraphics();
         }
-
+        //See above method, repeated logic for when right mouse is held down to empty squares
         private void EmptySquare_Tick(object sender, EventArgs e)
         {
             if (!pictureBox1.ClientRectangle.Contains(PointToClient(MousePosition)) ||
@@ -221,12 +221,12 @@ namespace Conways
 
             UpdateGraphics();
         }
-
+        
         private void Generation_Tick(object sender, EventArgs e)
         {
             NextGeneration();
         }
-
+        //Starts the square tick methods when mouse buttons are pressed
         private void SquareGrid_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -240,7 +240,7 @@ namespace Conways
                 timer2.Start();
             }
         }
-
+        //Stops the square tick methods when mouse buttons are no longer pressed
         private void SquareGrid_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -249,7 +249,7 @@ namespace Conways
                 timer2.Stop();
         }
 
-
+        //New game strip menu, stops game, sets all squares to not alive and empty
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             for (var i = 0; i < SquareArray.GetLength(0); i++)
@@ -270,7 +270,7 @@ namespace Conways
             }
             UpdateGraphics();
         }
-
+        //Sets speed of generation tick using tool strip
         private void setSpeedToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
             if (e.ClickedItem == msToolStripMenuItem)
@@ -310,6 +310,7 @@ namespace Conways
             }
         }
 
+        //Square Class, with bitmap graphics methods
         public class Square
         {
             private readonly Point _endPoint;
@@ -348,6 +349,7 @@ namespace Conways
             }
         }
 
+        
         private void loopingBoardToolStripMenuItem_CheckStateChanged(object sender, EventArgs e)
         {
             LoopingBoard = !LoopingBoard;
